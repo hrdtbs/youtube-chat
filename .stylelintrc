@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-recess-order",
+    "./node_modules/prettier-stylelint/config.js"
+  ]
+}

@@ -1,10 +1,845 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
+    <title>
+      Youtubeチャットスタイルジェネレーター｜Youtube Chat Style Generator
+    </title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Kosugi|Kosugi+Maru|M+PLUS+1p|M+PLUS+Rounded+1c|Noto+Sans+JP|Noto+Serif+JP|Sawarabi+Gothic|Sawarabi+Mincho&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./youtube-chat.css" />
   </head>
-  <body></body>
+  <body>
+    <body cz-shortcut-listen="true">
+      <h2>Youtube Chat Style Generator</h2>
+      <div id="split">
+        <div id="inputs">
+          <h3>フォント</h3>
+          <section>
+            <select
+              class="custom-select custom-select-md mb-3"
+              id="chat-font-family"
+            ></select>
+            <h4 class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="show-outlines"
+                checked
+              />
+              <label class="form-check-label" for="show-outlines">
+                縁取り
+              </label>
+            </h4>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">太さ</span>
+              </div>
+              <input
+                class="form-control"
+                type="number"
+                id="outline-size"
+                value="2"
+                min="0"
+                max="2"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">色</span>
+              </div>
+              <input
+                class="form-control"
+                type="color"
+                id="outline-color"
+                value="#242424"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h4 class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="show-avatars"
+                checked
+              />
+              <label class="form-check-label" for="show-avatars">
+                アイコン
+              </label>
+            </h4>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">サイズ</span>
+              </div>
+              <input
+                class="form-control"
+                id="avatar-size"
+                type="number"
+                value="24"
+                min="20"
+                max="32"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h4 class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="show-chname"
+                checked=""
+              />
+              <label class="form-check-label" for="show-chname">
+                ユーザー名
+              </label>
+            </h4>
+            <div>
+              <label for="author-font-size">フォントサイズ: </label
+              ><input type="number" id="author-font-size" value="20" />
+            </div>
+            <div>
+              <label for="author-line-height">行の高さ(デフォルト:0): </label
+              ><input type="number" id="author-line-height" value="0" />
+            </div>
+            <div>
+              <label for="author-color">色: </label
+              ><input type="color" id="author-color" value="#cccccc" />
+            </div>
+            <div>
+              <label for="author-owner-color">チャンネル管理者の色: </label
+              ><input type="color" id="author-owner-color" value="#ffd600" />
+            </div>
+            <div>
+              <label for="author-moderator-color">モデレーターの色: </label
+              ><input
+                type="color"
+                id="author-moderator-color"
+                value="#5e84f1"
+              />
+            </div>
+            <div>
+              <label for="author-member-color">スポンサーの色: </label
+              ><input type="color" id="author-member-color" value="#0f9d58" />
+            </div>
+            <div>
+              <label for="hide-badges"><s>バッジを隠す</s>: </label
+              ><input type="checkbox" id="hide-badges" />
+            </div>
+            <div>
+              <label for="member-badge-size">メンバー用バッジサイズ: </label
+              ><input type="number" id="member-badge-size" value="16" /><br />
+              ※16x16以上→ぼやけます
+            </div>
+            <div>
+              <label for="emoji-size">絵文字のサイズ: </label
+              ><input type="number" id="emoji-size" value="24" /><br />
+              ※24x24以上→ぼやけます
+            </div>
+            <div>
+              <label for="show-colon">「：」を名前の後に表示: </label
+              ><input type="checkbox" id="show-colon" checked="" />
+            </div>
+          </section>
+
+          <h3>コメントの設定:</h3>
+          <section>
+            <div>
+              <label for="message-font-size">フォントサイズ: </label
+              ><input type="number" id="message-font-size" value="18" />
+            </div>
+            <div>
+              <label for="message-line-height">行の高さ(デフォルト:0): </label
+              ><input type="number" id="message-line-height" value="0" />
+            </div>
+            <div>
+              <label for="author-membermessage-color">色: </label
+              ><input type="color" id="message-color" value="#ffffff" />
+            </div>
+            <div>
+              <label for="message-newline">ユーザー名の後に改行: </label
+              ><input type="checkbox" id="message-newline" />
+            </div>
+          </section>
+
+          <h3>時刻の設定:</h3>
+          <section>
+            <div>
+              <label for="show-timestamps">時刻を表示する: </label
+              ><input type="checkbox" id="show-timestamps" />
+            </div>
+            <div>
+              <label for="timestamp-font-size">フォントサイズ: </label
+              ><input type="number" id="timestamp-font-size" value="16" />
+            </div>
+            <div>
+              <label for="timestamp-line-height">行の高さ(デフォルト:0): </label
+              ><input type="number" id="timestamp-line-height" value="0" />
+            </div>
+            <div>
+              <label for="timestamp-color">色: </label
+              ><input type="color" id="timestamp-color" value="#999999" />
+            </div>
+          </section>
+
+          <h3>背景色:</h3>
+          <section>
+            <div>
+              <label for="background-color">背景色: </label
+              ><input
+                type="color"
+                id="background-color"
+                value="#000000"
+              /><input
+                type="range"
+                id="background-opacity"
+                min="0"
+                max="1"
+                value="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label for="background-color-bars"
+                >左側だけ塗りつぶす(下の4項目用): </label
+              ><input type="checkbox" id="background-color-bars" />
+            </div>
+            <div>
+              <label for="background-color">メッセージ背景色: </label
+              ><input
+                type="color"
+                id="message-background-color"
+                value="#cccccc"
+              /><input
+                type="range"
+                id="message-background-opacity"
+                min="0"
+                max="1"
+                value="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label for="background-color"
+                >チャンネル管理者のメッセージ背景色: </label
+              ><input
+                type="color"
+                id="owner-message-background-color"
+                value="#ffd600"
+              /><input
+                type="range"
+                id="owner-message-background-opacity"
+                min="0"
+                max="1"
+                value="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label for="background-color"
+                >モデレーターのメッセージ背景色: </label
+              ><input
+                type="color"
+                id="moderator-message-background-color"
+                value="#5e84f1"
+              /><input
+                type="range"
+                id="moderator-message-background-opacity"
+                min="0"
+                max="1"
+                value="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label for="background-color"
+                >スポンサーのメッセージ背景色: </label
+              ><input
+                type="color"
+                id="member-message-background-color"
+                value="#0f9d58"
+              /><input
+                type="range"
+                id="member-message-background-opacity"
+                min="0"
+                max="1"
+                value="0"
+                step="0.01"
+              />
+            </div>
+          </section>
+
+          <h3>スーパーチャット関係:</h3>
+          <section>
+            <div>
+              <label for="fan-funding-first-line-font-size"
+                >"*1"の行のフォントサイズ: </label
+              ><input
+                type="number"
+                id="fan-funding-first-line-font-size"
+                value="20"
+              />
+            </div>
+            <div>
+              <label for="fan-funding-first-line-line-height"
+                >"*1"の行の行の高さ(デフォルト:0): </label
+              ><input
+                type="number"
+                id="fan-funding-first-line-line-height"
+                value="0"
+              />
+            </div>
+            <div>
+              <label for="fan-funding-first-line-color">"*1"の行の色: </label
+              ><input
+                type="color"
+                id="fan-funding-first-line-color"
+                value="#ffffff"
+              />
+            </div>
+            <div>
+              <label for="fan-funding-second-line-font-size"
+                >"*2"の行のフォントサイズ: </label
+              ><input
+                type="number"
+                id="fan-funding-second-line-font-size"
+                value="18"
+              />
+            </div>
+            <div>
+              <label for="fan-funding-second-line-line-height"
+                >"*2"の行の行の高さ(デフォルト:0): </label
+              ><input
+                type="number"
+                id="fan-funding-second-line-line-height"
+                value="0"
+              />
+            </div>
+            <div>
+              <label for="fan-funding-second-line-color">"*2"の行の色: </label
+              ><input
+                type="color"
+                id="fan-funding-second-line-color"
+                value="#ffffff"
+              />
+            </div>
+            <div>
+              <label for="super-chat-content-line-font-size"
+                >スパチャ本文のフォントサイズ: </label
+              ><input
+                type="number"
+                id="super-chat-content-font-size"
+                value="18"
+              />
+            </div>
+            <div>
+              <label for="super-chat-content-line-line-height"
+                >スパチャ本文の行の高さ(デフォルト:0): </label
+              ><input
+                type="number"
+                id="super-chat-content-line-height"
+                value="0"
+              />
+            </div>
+            <div>
+              <label for="super-chat-content-color">スパチャ本文の色: </label
+              ><input
+                type="color"
+                id="super-chat-content-color"
+                value="#ffffff"
+              />
+            </div>
+            <div>
+              <label for="show-fan-funding-background"
+                >スポンサー登録時に背景色を表示: </label
+              ><input
+                type="checkbox"
+                id="show-fan-funding-background"
+                checked=""
+              />
+            </div>
+            <div>
+              <label for="show-ticker">スーパーチャット欄を表示</label
+              ><input type="checkbox" id="show-ticker" />
+            </div>
+            <div>
+              <label for="show-everything">チャット欄を表示</label
+              ><input type="checkbox" id="show-everything" checked="" />
+            </div>
+          </section>
+          <h3>フェードイン/アウト:</h3>
+          <section>
+            <div>
+              <label for="animation-in">フェードインを使う: </label
+              ><input type="checkbox" id="animation-in" />
+            </div>
+            <div>
+              <label for="animation-in-time">フェードの時間(ミリ秒): </label
+              ><input type="number" id="animation-in-time" value="200" />
+            </div>
+            <div>
+              <label for="animation-out"
+                >フェードアウトを使う(メッセージの自動削除): </label
+              ><input type="checkbox" id="animation-out" />
+            </div>
+            <div>
+              <label for="animation-wait-time">削除までの待ち時間(秒): </label
+              ><input type="number" id="animation-wait-time" value="30" />
+            </div>
+            <div>
+              <label for="animation-out-time">フェードの時間(ミリ秒): </label
+              ><input type="number" id="animation-out-time" value="200" />
+            </div>
+            <div>
+              <label for="animation-slide">横方向にフェード(→): </label
+              ><input type="checkbox" id="animation-slide" />
+            </div>
+            <div>
+              <label for="animation-reverse">横方向にフェード(←): </label
+              ><input type="checkbox" id="animation-reverse" />
+            </div>
+            <button id="animation-trigger">テスト再生</button>
+          </section>
+        </div>
+        <!--
+          Sidebar
+        -->
+        <div
+          class="d-flex flex-column bd-highlight mb-3"
+          style="position:fixed;top:0;right:0;width:50%;"
+        >
+          <div>
+            <div id="example-container">
+              <div id="fakebody">
+                <yt-live-chat-renderer>
+                  <yt-live-chat-ticker-renderer>
+                    <yt-live-chat-ticker-paid-message-item-renderer
+                      style="background-color: rgba(0,184,212,1);"
+                    >
+                      <div id="content">
+                        <span id="fake-avatar"></span>
+                        <span>$5.00</span>
+                      </div>
+                    </yt-live-chat-ticker-paid-message-item-renderer>
+                    <yt-live-chat-ticker-paid-message-item-renderer
+                      style="background-color: rgba(208,0,0,1);"
+                    >
+                      <div id="content">
+                        <span id="fake-avatar"></span>
+                        <span>$500.00</span>
+                      </div>
+                    </yt-live-chat-ticker-paid-message-item-renderer>
+                  </yt-live-chat-ticker-renderer>
+                  <yt-live-chat-item-list-renderer>
+                    <yt-live-chat-text-message-renderer author-type="owner">
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <span id="timestamp">12:00</span
+                        ><span id="author-badges"
+                          ><yt-live-chat-author-badge-renderer
+                            type="owner"
+                          ></yt-live-chat-author-badge-renderer></span
+                        ><span id="author-name" type="owner"
+                          >チャンネル管理者</span
+                        ><span id="message"
+                          >吾輩は猫である。名前はまだ無い。</span
+                        >
+                      </div>
+                    </yt-live-chat-text-message-renderer>
+                    <yt-live-chat-text-message-renderer author-type="moderator">
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <span id="timestamp">12:00</span
+                        ><span id="author-badges"
+                          ><yt-live-chat-author-badge-renderer
+                            type="moderator"
+                          ></yt-live-chat-author-badge-renderer></span
+                        ><span id="author-name" type="moderator"
+                          >モデレーター</span
+                        ><span id="message">This is moderator's message.</span>
+                      </div>
+                    </yt-live-chat-text-message-renderer>
+                    <yt-live-chat-text-message-renderer author-type="member">
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <span id="timestamp">12:00</span
+                        ><span id="author-badges"
+                          ><yt-live-chat-author-badge-renderer
+                            type="member"
+                          ></yt-live-chat-author-badge-renderer></span
+                        ><span id="author-name" type="member">スポンサー</span
+                        ><span id="message" type="member"
+                          >これはスポンサー登録した人のコメントです。</span
+                        >
+                      </div>
+                    </yt-live-chat-text-message-renderer>
+                    <yt-live-chat-text-message-renderer>
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <span id="timestamp">12:00</span
+                        ><span id="author-name">ふつうの視聴者</span
+                        ><span id="message">顔文字✩°｡⋆⸜(* ॑꒳ ॑* )⸝ test</span>
+                      </div>
+                    </yt-live-chat-text-message-renderer>
+                    <yt-live-chat-legacy-paid-message-renderer>
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <div id="event-text">新規スポンサー *1</div>
+                        <div id="detail-text">
+                          ようこそ、<span class="mention">お名前</span> さん！
+                        </div>
+                      </div>
+                    </yt-live-chat-legacy-paid-message-renderer>
+                    <yt-live-chat-text-message-renderer>
+                      <div id="author-photo"></div>
+                      <div id="content">
+                        <span id="timestamp">12:00</span
+                        ><span id="author-name">User Name</span
+                        ><span id="message"
+                          >春眠曉を覺えず　處處啼鳥を聞く　夜來風雨の聲　花落つること知りぬ多少ぞ</span
+                        >
+                      </div>
+                    </yt-live-chat-text-message-renderer>
+                    <yt-live-chat-paid-message-renderer>
+                      <div
+                        id="header"
+                        style="background-color: rgba(208,0,0,1);"
+                      >
+                        <div id="author-photo"></div>
+                        <div id="header-content">
+                          <div id="author-name">スパチャの投稿者名 *1</div>
+                          <div id="purchase-amount">￥10,000 *2</div>
+                        </div>
+                      </div>
+                      <div
+                        id="content"
+                        style="background-color: rgba(230,33,23,1);"
+                      >
+                        <div id="message" dir="auto">
+                          これはスパチャ本文のサンプルです💗
+                        </div>
+                      </div>
+                    </yt-live-chat-paid-message-renderer>
+                    <yt-live-chat-paid-message-renderer>
+                      <div
+                        id="header"
+                        style="background-color: rgba(0,184,212,1);"
+                      >
+                        <div id="author-photo"></div>
+                        <div id="header-content">
+                          <div id="author-name">スパチャの投稿者名 *1</div>
+                          <div id="purchase-amount">$20.00 *2</div>
+                        </div>
+                      </div>
+                      <div
+                        id="content"
+                        style="background-color: rgba(0,229,255,1);"
+                      >
+                        <div id="message" dir="auto">
+                          スーパーチャットの本文その2。
+                        </div>
+                      </div>
+                    </yt-live-chat-paid-message-renderer>
+                  </yt-live-chat-item-list-renderer>
+                </yt-live-chat-renderer>
+              </div>
+            </div>
+          </div>
+          <div>
+            <textarea
+              id="output"
+              onclick="this.focus(); this.select();"
+              style="width:100%;height: 400px;outline: none;"
+            ></textarea>
+            <style id="example-styles">
+              @import url("https://fonts.googleapis.com/earlyaccess/notosansjp.css");
+
+              /* Background colors*/
+              body {
+                overflow: hidden;
+                background-color: rgba(0, 0, 0, 0);
+              }
+              /* Transparent background. */
+              yt-live-chat-renderer {
+                background-color: transparent !important;
+              }
+              yt-live-chat-text-message-renderer,
+              yt-live-chat-text-message-renderer[is-highlighted] {
+                background-color: transparent !important;
+              }
+
+              yt-live-chat-text-message-renderer[author-type="owner"],
+              yt-live-chat-text-message-renderer[author-type="owner"][is-highlighted] {
+                background-color: transparent !important;
+              }
+
+              yt-live-chat-text-message-renderer[author-type="moderator"],
+              yt-live-chat-text-message-renderer[author-type="moderator"][is-highlighted] {
+                background-color: transparent !important;
+              }
+
+              yt-live-chat-text-message-renderer[author-type="member"],
+              yt-live-chat-text-message-renderer[author-type="member"][is-highlighted] {
+                background-color: transparent !important;
+              }
+
+              yt-live-chat-author-chip #author-name {
+                background-color: transparent !important;
+              }
+              /* Outlines */
+              yt-live-chat-renderer * {
+                text-shadow: -2px -2px #000000, -2px -1px #000000,
+                  -2px 0px #000000, -2px 1px #000000, -2px 2px #000000,
+                  -1px -2px #000000, -1px -1px #000000, -1px 0px #000000,
+                  -1px 1px #000000, -1px 2px #000000, 0px -2px #000000,
+                  0px -1px #000000, 0px 0px #000000, 0px 1px #000000,
+                  0px 2px #000000, 1px -2px #000000, 1px -1px #000000,
+                  1px 0px #000000, 1px 1px #000000, 1px 2px #000000,
+                  2px -2px #000000, 2px -1px #000000, 2px 0px #000000,
+                  2px 1px #000000, 2px 2px #000000;
+                font-family: "Noto Sans JP";
+                font-size: 18px !important;
+                line-height: 18px !important;
+              }
+
+              yt-live-chat-text-message-renderer #content,
+              yt-live-chat-legacy-paid-message-renderer #content {
+                overflow: initial !important;
+              }
+
+              /* Hide scrollbar. */
+              yt-live-chat-item-list-renderer #items {
+                overflow: hidden !important;
+              }
+
+              yt-live-chat-item-list-renderer #item-scroller {
+                overflow: hidden !important;
+              }
+
+              /* Hide header and input. */
+              yt-live-chat-header-renderer,
+              yt-live-chat-message-input-renderer {
+                display: none !important;
+              }
+
+              /* Reduce side padding. */
+              yt-live-chat-text-message-renderer,
+              yt-live-chat-legacy-paid-message-renderer {
+                padding-left: 4px !important;
+                padding-right: 4px !important;
+              }
+
+              yt-live-chat-paid-message-renderer #header {
+                padding-left: 4px !important;
+                padding-right: 4px !important;
+              }
+
+              /* Avatars. */
+              yt-img-shadow #img,
+              yt-live-chat-text-message-renderer #author-photo,
+              yt-live-chat-paid-message-renderer #author-photo,
+              yt-live-chat-legacy-paid-message-renderer #author-photo {
+                width: 24px !important;
+                height: 24px !important;
+                border-radius: 24px !important;
+                margin-right: 6px !important;
+              }
+
+              /* Member Badge. */
+              img.yt-live-chat-author-badge-renderer,
+              div #image,
+              svg.yt-icon {
+                width: 16px !important;
+                height: 16px !important;
+              }
+
+              /* Emoji. */
+              img.yt-live-chat-text-message-renderer {
+                width: 24px !important;
+                height: 24px !important;
+              }
+
+              /* Hide badges. */
+              yt-live-chat-text-message-renderer #author-badges {
+                vertical-align: text-top !important;
+              }
+
+              /* Timestamps. */
+              yt-live-chat-text-message-renderer #timestamp {
+                color: #999999 !important;
+                font-family: "Noto Sans JP";
+                font-size: 16px !important;
+                line-height: 16px !important;
+              }
+
+              /* Badges. */
+              yt-live-chat-text-message-renderer #author-name[type="owner"],
+              yt-live-chat-text-message-renderer #author-name.owner,
+              yt-live-chat-text-message-renderer
+                yt-live-chat-author-badge-renderer[type="owner"] {
+                color: #ffd600 !important;
+              }
+
+              yt-live-chat-text-message-renderer #author-name[type="moderator"],
+              yt-live-chat-text-message-renderer #author-name.moderator,
+              yt-live-chat-text-message-renderer
+                yt-live-chat-author-badge-renderer[type="moderator"] {
+                color: #5e84f1 !important;
+              }
+
+              yt-live-chat-text-message-renderer #author-name[type="member"],
+              yt-live-chat-text-message-renderer #author-name.member,
+              yt-live-chat-text-message-renderer
+                yt-live-chat-author-badge-renderer[type="member"] {
+                color: #0f9d58 !important;
+              }
+
+              /* Channel names. */
+              yt-live-chat-text-message-renderer #author-name {
+                color: #cccccc !important;
+                font-family: "Noto Sans JP";
+                font-size: 20px !important;
+                line-height: 20px !important;
+              }
+
+              yt-live-chat-text-message-renderer #author-name::after {
+                content: ":";
+                margin-left: 2px;
+              }
+
+              /* Messages. */
+              yt-live-chat-text-message-renderer #message,
+              yt-live-chat-text-message-renderer #message * {
+                color: #ffffff !important;
+                font-family: "Noto Sans JP";
+                font-size: 18px !important;
+                line-height: 18px !important;
+              }
+
+              /* SuperChat/Fan Funding Messages. */
+              yt-live-chat-paid-message-renderer #author-name,
+              yt-live-chat-paid-message-renderer #author-name *,
+              yt-live-chat-legacy-paid-message-renderer #event-text,
+              yt-live-chat-legacy-paid-message-renderer #event-text * {
+                color: #ffffff !important;
+                font-family: "Noto Sans JP";
+                font-size: 20px !important;
+                line-height: 20px !important;
+              }
+
+              yt-live-chat-paid-message-renderer #purchase-amount,
+              yt-live-chat-paid-message-renderer #purchase-amount *,
+              yt-live-chat-legacy-paid-message-renderer #detail-text,
+              yt-live-chat-legacy-paid-message-renderer #detail-text * {
+                color: #ffffff !important;
+                font-family: "Noto Sans JP";
+                font-size: 18px !important;
+                line-height: 18px !important;
+              }
+
+              yt-live-chat-paid-message-renderer #content,
+              yt-live-chat-paid-message-renderer #content * {
+                color: #ffffff !important;
+                font-family: "Noto Sans JP";
+                font-size: 18px !important;
+                line-height: 18px !important;
+              }
+
+              yt-live-chat-paid-message-renderer {
+                margin: 4px 0 !important;
+              }
+
+              yt-live-chat-legacy-paid-message-renderer {
+                background-color: #0f9d58 !important;
+                margin: 4px 0 !important;
+              }
+
+              yt-live-chat-text-message-renderer a,
+              yt-live-chat-legacy-paid-message-renderer a {
+                text-decoration: none !important;
+              }
+
+              yt-live-chat-text-message-renderer[is-deleted],
+              yt-live-chat-legacy-paid-message-renderer[is-deleted] {
+                display: none !important;
+              }
+
+              yt-live-chat-ticker-renderer {
+                background-color: transparent !important;
+                box-shadow: none !important;
+              }
+              yt-live-chat-ticker-renderer {
+                display: none !important;
+              }
+
+              yt-live-chat-ticker-paid-message-item-renderer,
+              yt-live-chat-ticker-paid-message-item-renderer *,
+              yt-live-chat-ticker-sponsor-item-renderer,
+              yt-live-chat-ticker-sponsor-item-renderer * {
+                color: #ffffff !important;
+                font-family: "Noto Sans JP";
+              }
+
+              yt-live-chat-mode-change-message-renderer,
+              yt-live-chat-viewer-engagement-message-renderer,
+              yt-live-chat-restricted-participation-renderer {
+                display: none !important;
+              }
+
+              yt-live-chat-viewer-engagement-message-renderer {
+                display: none !important;
+              }
+              #fakebody {
+                background-color: rgba(0, 0, 0, 0);
+              }
+              yt-live-chat-text-message-renderer,
+              yt-live-chat-legacy-paid-message-renderer {
+                animation-delay: 200ms;
+              }
+            </style>
+          </div>
+        </div>
+      </div>
+
+      <script
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"
+      ></script>
+      <script src="./index.js"></script>
+    </body>
+  </body>
 </html>

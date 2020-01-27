@@ -3,12 +3,7 @@ html {
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
-style[contenteditable] {
-  display: block;
-  overflow: scroll;
-  white-space: pre;
-  background-color: gainsboro;
-}
+
 body {
   padding: 2em;
   overflow: auto !important;

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+    <!--
+      <base href="https://hrdtbs.github.io/youtube-chat-style-generator/" />
+    -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -23,6 +26,7 @@
   <body>
     <body cz-shortcut-listen="true">
       <h2>Youtube Chat Style Generator</h2>
+      <p><a href="https://www.youtube.com/live_dashboard?nv=1"></a></p>
       <div id="split">
         <div id="inputs">
           <h3>フォント</h3>
@@ -69,9 +73,6 @@
                 id="outline-color"
                 value="#242424"
               />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
             </div>
           </section>
 
@@ -87,6 +88,7 @@
                 アイコン
               </label>
             </h4>
+
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text">サイズ</span>
@@ -117,51 +119,142 @@
                 ユーザー名
               </label>
             </h4>
-            <div>
-              <label for="author-font-size">フォントサイズ: </label
-              ><input type="number" id="author-font-size" value="20" />
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="show-colon"
+                checked
+              />
+              <label class="form-check-label" for="show-colon">
+                「：」を名前の後に表示
+              </label>
             </div>
-            <div>
-              <label for="author-line-height">行の高さ(デフォルト:0): </label
-              ><input type="number" id="author-line-height" value="0" />
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">フォントサイズ</span>
+              </div>
+              <input
+                class="form-control"
+                id="author-font-size"
+                type="number"
+                value="24"
+                min="16"
+                max="32"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
             </div>
-            <div>
-              <label for="author-color">色: </label
-              ><input type="color" id="author-color" value="#cccccc" />
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">行の高さ</span>
+              </div>
+              <input
+                class="form-control"
+                id="author-line-height"
+                type="number"
+                value="0"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
             </div>
-            <div>
-              <label for="author-owner-color">チャンネル管理者の色: </label
-              ><input type="color" id="author-owner-color" value="#ffd600" />
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">色</span>
+              </div>
+              <input
+                class="form-control"
+                type="color"
+                id="author-color"
+                value="#cccccc"
+              />
             </div>
-            <div>
-              <label for="author-moderator-color">モデレーターの色: </label
-              ><input
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">チャンネル管理者の色</span>
+              </div>
+              <input
+                class="form-control"
+                type="color"
+                id="author-owner-color"
+                value="#ffd600"
+              />
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">モデレーターの色</span>
+              </div>
+              <input
+                class="form-control"
                 type="color"
                 id="author-moderator-color"
                 value="#5e84f1"
               />
             </div>
-            <div>
-              <label for="author-member-color">スポンサーの色: </label
-              ><input type="color" id="author-member-color" value="#0f9d58" />
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">スポンサーの色</span>
+              </div>
+              <input
+                class="form-control"
+                type="color"
+                id="author-member-color"
+                value="#0f9d58"
+              />
             </div>
-            <div>
-              <label for="hide-badges"><s>バッジを隠す</s>: </label
-              ><input type="checkbox" id="hide-badges" />
+
+            <h5 class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="show-badges"
+                checked
+              />
+              <label class="form-check-label" for="show-badges">
+                メンバー用バッジ
+              </label>
+            </h5>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">サイズ</span>
+              </div>
+              <input
+                class="form-control"
+                id="member-badge-size"
+                max="16"
+                value="16"
+                type="number"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
             </div>
-            <div>
-              <label for="member-badge-size">メンバー用バッジサイズ: </label
-              ><input type="number" id="member-badge-size" value="16" /><br />
-              ※16x16以上→ぼやけます
-            </div>
-            <div>
-              <label for="emoji-size">絵文字のサイズ: </label
-              ><input type="number" id="emoji-size" value="24" /><br />
-              ※24x24以上→ぼやけます
-            </div>
-            <div>
-              <label for="show-colon">「：」を名前の後に表示: </label
-              ><input type="checkbox" id="show-colon" checked="" />
+
+            <h5>絵文字</h5>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">サイズ</span>
+              </div>
+              <input
+                class="form-control"
+                id="member-badge-size"
+                max="24"
+                value="24"
+                type="number"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">px</span>
+              </div>
             </div>
           </section>
 

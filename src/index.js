@@ -94,7 +94,7 @@ var template = [
   "",
   "/* Hide badges. */",
   " yt-live-chat-text-message-renderer #author-badges {",
-  "  {{hide-badges}}",
+  "  {{show-badges}}",
   "  vertical-align: text-top !important;",
   "}",
   "",
@@ -285,8 +285,8 @@ var callbacks = {
     }
     return "";
   },
-  "hide-badges": function(id) {
-    if (isChecked(id)) {
+  "show-badges": function(id) {
+    if (!isChecked(id)) {
       return "display: none !important;";
     }
     return "";

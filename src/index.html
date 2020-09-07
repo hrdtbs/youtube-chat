@@ -1,938 +1,1122 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
   <head>
-    <!--
-      <base href="https://hrdtbs.github.io/youtube-chat-style-generator/" />
-    -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>
-      Youtubeチャットスタイルジェネレーター｜Youtube Chat Style Generator
-    </title>
+    <meta content="nofollow,noindex" name="robots" />
     <link
-      href="https://fonts.googleapis.com/css?family=Kosugi|Kosugi+Maru|M+PLUS+1p|M+PLUS+Rounded+1c|Noto+Sans+JP|Noto+Serif+JP|Sawarabi+Gothic|Sawarabi+Mincho&display=swap"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="./style.css" />
-    <link rel="stylesheet" href="./youtube-chat.css" />
+    <style>
+      body {
+        background-size: 30px 30px;
+        background-image: linear-gradient(
+            45deg,
+            #eee 25%,
+            transparent 25%,
+            transparent 75%,
+            #eee 75%,
+            #eee 100%
+          ),
+          linear-gradient(
+            45deg,
+            #eee 25%,
+            #fff 25%,
+            #fff 75%,
+            #eee 75%,
+            #eee 100%
+          );
+        background-repeat: repeat;
+        background-position: 0 0, 15px 15px;
+      }
+    </style>
+    <style>
+      html {
+        font-family: Roboto, Arial, sans-serif;
+        font-size: 10px;
+      }
+
+      body {
+        margin: 0;
+        overflow-y: scroll;
+        padding: 0;
+      }
+
+      paper-button {
+        align-items: center;
+        box-sizing: border-box;
+        display: inline-flex;
+        font: inherit;
+        justify-content: center;
+        margin: 0 0.29em;
+        min-width: 5.14em;
+        outline-width: 0;
+        position: relative;
+        z-index: 0;
+      }
+
+      yt-img-shadow {
+        flex: none;
+        display: inline-block;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      yt-img-shadow[loaded] {
+        opacity: 1;
+      }
+
+      yt-img-shadow.no-transition {
+        opacity: 1;
+        transition: none;
+      }
+
+      yt-img-shadow img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      yt-icon {
+        fill: currentColor;
+        width: var(--iron-icon-height, 24px);
+        height: var(--iron-icon-width, 24px);
+        stroke: none;
+        display: inline-flex;
+        position: relative;
+        align-items: center;
+        vertical-align: middle;
+        justify-content: center;
+      }
+
+      yt-button-renderer {
+        display: inline-block;
+        font-size: 1.4rem;
+        font-weight: 500;
+        letter-spacing: 0.007px;
+        text-transform: uppercase;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+
+      yt-button-renderer[is-paper-button] {
+        border-radius: 2px;
+        margin: 0;
+      }
+
+      yt-button-renderer a {
+        display: flex;
+      }
+
+      yt-button-renderer a.yt-simple-endpoint {
+        border-radius: inherit;
+        color: var(--yt-endpoint-color);
+        text-decoration: none;
+      }
+
+      yt-button-renderer #button {
+        align-items: center;
+        border-radius: inherit;
+        flex: 1 1 auto;
+        flex-direction: row;
+        height: auto;
+        justify-content: center;
+        margin: 0;
+        padding: var(--yt-button-padding, 0.7em 0.57em);
+        width: var(--yt-paper-button-width, auto);
+      }
+
+      yt-button-renderer yt-formatted-string {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      yt-live-chat-renderer {
+        background-color: var(
+          --yt-live-chat-background-color,
+          hsl(0, 0%, 100%)
+        );
+        color: var(--yt-live-chat-primary-text-color, hsl(0, 0%, 6.7%));
+        display: block;
+        flex: 1;
+        flex-basis: 0.000000001px;
+        flex-direction: column;
+        font-size: 13px;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+      }
+
+      yt-live-chat-item-list-renderer {
+        display: block;
+        flex: 1;
+        flex-basis: 0.000000001px;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      yt-live-chat-text-message-renderer:not(:first-child),
+      yt-live-chat-legacy-paid-message-renderer:not(:first-child),
+      yt-live-chat-paid-message-renderer:not(:first-child) {
+        border-top: var(--yt-live-chat-item-list-item-border, none);
+      }
+
+      yt-live-chat-text-message-renderer {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: row;
+        font-size: 13px;
+        overflow: hidden;
+        padding: 4px 24px;
+        position: relative;
+        --yt-endpoint-color: var(
+          --yt-live-chat-primary-text-color,
+          hsl(0, 0%, 6.7%)
+        );
+        --yt-endpoint-hover-color: var(
+          --yt-live-chat-primary-text-color,
+          hsl(0, 0%, 6.7%)
+        );
+      }
+
+      yt-live-chat-text-message-renderer[is-highlighted] {
+        background-color: var(
+          --yt-live-chat-message-highlight-background-color,
+          #f8f8f8
+        );
+      }
+
+      yt-live-chat-text-message-renderer yt-img-shadow {
+        flex: none;
+        display: block;
+        overflow: hidden;
+        margin-right: 16px;
+        border-radius: 50%;
+      }
+
+      yt-live-chat-text-message-renderer #content {
+        min-width: 0;
+        align-self: center;
+      }
+
+      yt-live-chat-text-message-renderer #timestamp {
+        color: var(--yt-live-chat-tertiary-text-color, hsla(0, 0%, 6.7%, 0.4));
+        margin: var(--yt-live-chat-item-timestamp-margin, 0 8px 0 0);
+        display: var(--yt-live-chat-item-timestamp-display, inline);
+        font-size: 11px;
+      }
+
+      yt-live-chat-text-message-renderer yt-live-chat-author-chip {
+        display: inline-flex;
+        align-items: baseline;
+        margin-right: 8px;
+      }
+
+      yt-live-chat-text-message-renderer #chat-badges:empty {
+        display: none;
+      }
+
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-chip[highlights-enabled]
+        #chat-badges {
+        order: 1;
+      }
+
+      yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer {
+        margin: 0 4px 0 0;
+        display: inline-block;
+        vertical-align: sub;
+      }
+
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-chip[highlights-enabled]
+        yt-live-chat-author-badge-renderer {
+        margin: 0 0 0 2px;
+      }
+
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-badge-renderer[type="moderator"] {
+        color: var(--yt-live-chat-moderator-color, hsl(225, 84%, 66%));
+      }
+
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-badge-renderer[type="member"] {
+        color: var(--yt-live-chat-sponsor-color, #107516);
+      }
+
+      yt-live-chat-text-message-renderer yt-live-chat-author-badge-renderer img,
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-badge-renderer
+        yt-icon {
+        width: 16px;
+        height: 16px;
+        display: block;
+        font-size: 16px;
+      }
+
+      yt-live-chat-text-message-renderer
+        yt-live-chat-author-badge-renderer
+        yt-icon
+        svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        pointer-events: none;
+      }
+
+      yt-live-chat-text-message-renderer #author-name {
+        color: var(--yt-live-chat-secondary-text-color, hsla(0, 0%, 6.7%, 0.6));
+        box-sizing: border-box;
+        font-weight: 500;
+        border-radius: 2px;
+      }
+
+      yt-live-chat-text-message-renderer[is-highlighted] #author-name {
+        padding: 0 4px;
+        background-color: #ffd600;
+      }
+
+      yt-live-chat-text-message-renderer[is-highlighted]
+        #author-name[type="owner"] {
+        color: var(
+          --yt-live-chat-message-highlight-text-color,
+          rgba(0, 0, 0, 8.7)
+        );
+      }
+
+      yt-live-chat-text-message-renderer #author-name[type="owner"] {
+        color: var(--yt-live-chat-owner-color, hsl(40, 76%, 55%));
+      }
+
+      yt-live-chat-text-message-renderer #author-name[type="moderator"] {
+        color: var(--yt-live-chat-moderator-color, hsl(225, 84%, 66%));
+      }
+
+      yt-live-chat-text-message-renderer #author-name[type="member"] {
+        color: var(--yt-live-chat-sponsor-color, #107516);
+      }
+
+      yt-live-chat-text-message-renderer #message {
+        color: var(--yt-live-chat-primary-text-color, hsl(0, 0%, 6.7%));
+        overflow: hidden;
+        word-wrap: break-word;
+        word-break: break-word;
+        line-height: 16px;
+        overflow-wrap: break-word;
+      }
+
+      yt-live-chat-text-message-renderer[is-deleted] #message {
+        color: var(--yt-live-chat-deleted-message-color, rgba(0, 0, 0, 0.5));
+        font-style: italic;
+      }
+
+      yt-live-chat-text-message-renderer[is-deleted]:not([show-original])
+        #message {
+        display: none;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer {
+        display: block;
+        padding: 4px 24px;
+        position: relative;
+        --yt-live-chat-sponsor-color: #0f9d58;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #card {
+        color: #fff;
+        display: flex;
+        padding: 8px 16px;
+        position: relative;
+        font-size: 14px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+          0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        min-height: 40px;
+        align-items: center;
+        border-radius: 4px;
+        flex-direction: row;
+        background-color: var(--yt-live-chat-sponsor-color);
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #author-photo {
+        flex: none;
+        display: block;
+        overflow: hidden;
+        align-self: flex-start;
+        margin-right: 16px;
+        border-radius: 50%;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #content {
+        flex: 1;
+        flex-basis: 0.000000001px;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #author-name {
+        display: none;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #event-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 500;
+      }
+
+      yt-live-chat-legacy-paid-message-renderer #detail-text {
+        font-size: 15px;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+
+      yt-live-chat-paid-message-renderer {
+        display: block;
+        padding: 4px 24px;
+        position: relative;
+        font-size: 15px;
+        --yt-live-chat-paid-message-background-color: var(
+          --yt-live-chat-paid-message-primary-color
+        );
+        --yt-live-chat-paid-message-header-background-color: var(
+          --yt-live-chat-paid-message-secondary-color
+        );
+        --yt-live-chat-paid-message-item-timestamp-display: var(
+          --yt-live-chat-paid-message-timestamp-display,
+          none
+        );
+        --yt-live-chat-paid-message-text-input-field-placeholder-color: var(
+          --yt-live-chat-paid-message-color
+        );
+      }
+
+      yt-live-chat-paid-message-renderer #card {
+        display: flex;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+          0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        flex-direction: column;
+      }
+
+      yt-live-chat-paid-message-renderer #card yt-img-shadow {
+        flex: none;
+        width: 40px;
+        height: 40px;
+        display: block;
+        overflow: hidden;
+        margin-right: 16px;
+        border-radius: 50%;
+      }
+
+      yt-live-chat-paid-message-renderer #header {
+        color: var(--yt-live-chat-paid-message-header-color, #fff);
+        display: flex;
+        padding: 8px 16px;
+        position: relative;
+        min-height: 20px;
+        font-weight: 500;
+        align-items: center;
+        flex-direction: row;
+        background-color: var(
+          --yt-live-chat-paid-message-header-background-color,
+          #125aac
+        );
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+
+      yt-live-chat-paid-message-renderer[show-only-header] #header {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
+      yt-live-chat-paid-message-renderer #header-content {
+        flex: 1;
+        display: flex;
+        flex-basis: 0.000000001px;
+        align-items: baseline;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      yt-live-chat-paid-message-renderer #header-content-primary-column {
+        flex: 1;
+        display: flex;
+        flex-basis: 0.000000001px;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      yt-live-chat-paid-message-renderer #author-name {
+        color: var(
+          --yt-live-chat-paid-message-author-name-color,
+          rgba(255, 255, 255, 0.7)
+        );
+        font-size: 14px;
+      }
+
+      yt-live-chat-paid-message-renderer #timestamp {
+        color: var(--yt-live-chat-teriary-text-color, hsla(0, 0%, 6.7%, 0.4));
+        margin: var(--yt-live-chat-item-timestamp-margin, 0 8px 0 0);
+        display: none;
+        font-size: 11px;
+      }
+
+      yt-live-chat-paid-message-renderer #content {
+        color: var(--yt-live-chat-paid-message-color, #fff);
+        padding: 8px 16px;
+        word-wrap: break-word;
+        word-break: break-word;
+        background-color: var(
+          --yt-live-chat-paid-message-background-color,
+          #1565c0
+        );
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
+      yt-live-chat-paid-message-renderer[allow-animations] #header,
+      yt-live-chat-paid-message-renderer[allow-animations] #content {
+        transition-duration: 0.2s;
+        transition-property: background-color;
+      }
+
+      yt-formatted-string#deleted-state {
+        color: var(--yt-live-chat-deleted-message-color, rgba(0, 0, 0, 0.5));
+        font-style: italic;
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer {
+        display: block;
+        font-size: 12px;
+        line-height: 16px;
+        padding: 4px 24px;
+
+        --yt-endpoint-color: #2196f3;
+        --yt-endpoint-hover-color: var(--yt-live-chat-primary-text-color);
+        --yt-endpoint-visited-color: #2196f3;
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer:not(:first-child) {
+        border-top: var(--yt-live-chat-item-list-item-border, none);
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer #card {
+        background-color: var(
+          --yt-live-chat-vem-background-color,
+          hsl(0, 0%, 93.3%)
+        );
+        border-radius: 4px;
+        display: flex;
+        flex-direction: row;
+        padding: 12px 16px;
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer #icon {
+        color: #ff0000;
+        flex: none;
+        margin-right: 16px;
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer #content {
+        align-items: flex-start;
+        align-self: center;
+        display: flex;
+        flex: 1;
+        flex-basis: 0.000000001px;
+        flex-direction: column;
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer #message {
+        color: var(--yt-live-chat-primary-text-color);
+      }
+
+      yt-live-chat-viewer-engagement-message-renderer #action-button {
+        margin: 2px 0 -4px -16px;
+      }
+    </style>
+    <link rel="stylesheet" href="./main.css" />
   </head>
   <body>
-    <body cz-shortcut-listen="true">
-      <h2>Youtube Chat Style Generator</h2>
-      <p><a href="https://www.youtube.com/live_dashboard?nv=1"></a></p>
-      <div id="split">
-        <div id="inputs">
-          <h3>フォント</h3>
-          <section>
-            <select
-              class="custom-select custom-select-md mb-3"
-              id="chat-font-family"
-            ></select>
-            <h4 class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="show-outlines"
-                checked
-              />
-              <label class="form-check-label" for="show-outlines">
-                縁取り
-              </label>
-            </h4>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">太さ</span>
-              </div>
-              <input
-                class="form-control"
-                type="number"
-                id="outline-size"
-                value="2"
-                min="0"
-                max="2"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">色</span>
-              </div>
-              <input
-                class="form-control"
-                type="color"
-                id="outline-color"
-                value="#242424"
-              />
-            </div>
-          </section>
-
-          <section>
-            <h4 class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="show-avatars"
-                checked
-              />
-              <label class="form-check-label" for="show-avatars">
-                アイコン
-              </label>
-            </h4>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">サイズ</span>
-              </div>
-              <input
-                class="form-control"
-                id="avatar-size"
-                type="number"
-                value="24"
-                min="20"
-                max="32"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h4 class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="show-chname"
-                checked=""
-              />
-              <label class="form-check-label" for="show-chname">
-                ユーザー名
-              </label>
-            </h4>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="show-colon"
-                checked
-              />
-              <label class="form-check-label" for="show-colon">
-                「：」を名前の後に表示
-              </label>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">フォントサイズ</span>
-              </div>
-              <input
-                class="form-control"
-                id="author-font-size"
-                type="number"
-                value="24"
-                min="16"
-                max="32"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">行の高さ</span>
-              </div>
-              <input
-                class="form-control"
-                id="author-line-height"
-                type="number"
-                value="0"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">色</span>
-              </div>
-              <input
-                class="form-control"
-                type="color"
-                id="author-color"
-                value="#cccccc"
-              />
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">チャンネル管理者の色</span>
-              </div>
-              <input
-                class="form-control"
-                type="color"
-                id="author-owner-color"
-                value="#ffd600"
-              />
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">モデレーターの色</span>
-              </div>
-              <input
-                class="form-control"
-                type="color"
-                id="author-moderator-color"
-                value="#5e84f1"
-              />
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">スポンサーの色</span>
-              </div>
-              <input
-                class="form-control"
-                type="color"
-                id="author-member-color"
-                value="#0f9d58"
-              />
-            </div>
-
-            <h5 class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="show-badges"
-                checked
-              />
-              <label class="form-check-label" for="show-badges">
-                メンバー用バッジ
-              </label>
-            </h5>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">サイズ</span>
-              </div>
-              <input
-                class="form-control"
-                id="member-badge-size"
-                max="16"
-                value="16"
-                type="number"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-
-            <h5>絵文字</h5>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">サイズ</span>
-              </div>
-              <input
-                class="form-control"
-                id="member-badge-size"
-                max="24"
-                value="24"
-                type="number"
-              />
-              <div class="input-group-append">
-                <span class="input-group-text">px</span>
-              </div>
-            </div>
-          </section>
-
-          <h3>コメントの設定:</h3>
-          <section>
-            <div>
-              <label for="message-font-size">フォントサイズ: </label
-              ><input type="number" id="message-font-size" value="18" />
-            </div>
-            <div>
-              <label for="message-line-height">行の高さ(デフォルト:0): </label
-              ><input type="number" id="message-line-height" value="0" />
-            </div>
-            <div>
-              <label for="author-membermessage-color">色: </label
-              ><input type="color" id="message-color" value="#ffffff" />
-            </div>
-            <div>
-              <label for="message-newline">ユーザー名の後に改行: </label
-              ><input type="checkbox" id="message-newline" />
-            </div>
-          </section>
-
-          <h3>時刻の設定:</h3>
-          <section>
-            <div>
-              <label for="show-timestamps">時刻を表示する: </label
-              ><input type="checkbox" id="show-timestamps" />
-            </div>
-            <div>
-              <label for="timestamp-font-size">フォントサイズ: </label
-              ><input type="number" id="timestamp-font-size" value="16" />
-            </div>
-            <div>
-              <label for="timestamp-line-height">行の高さ(デフォルト:0): </label
-              ><input type="number" id="timestamp-line-height" value="0" />
-            </div>
-            <div>
-              <label for="timestamp-color">色: </label
-              ><input type="color" id="timestamp-color" value="#999999" />
-            </div>
-          </section>
-
-          <h3>背景色:</h3>
-          <section>
-            <div>
-              <label for="background-color">背景色: </label
-              ><input
-                type="color"
-                id="background-color"
-                value="#000000"
-              /><input
-                type="range"
-                id="background-opacity"
-                min="0"
-                max="1"
-                value="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label for="background-color-bars"
-                >左側だけ塗りつぶす(下の4項目用): </label
-              ><input type="checkbox" id="background-color-bars" />
-            </div>
-            <div>
-              <label for="background-color">メッセージ背景色: </label
-              ><input
-                type="color"
-                id="message-background-color"
-                value="#cccccc"
-              /><input
-                type="range"
-                id="message-background-opacity"
-                min="0"
-                max="1"
-                value="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label for="background-color"
-                >チャンネル管理者のメッセージ背景色: </label
-              ><input
-                type="color"
-                id="owner-message-background-color"
-                value="#ffd600"
-              /><input
-                type="range"
-                id="owner-message-background-opacity"
-                min="0"
-                max="1"
-                value="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label for="background-color"
-                >モデレーターのメッセージ背景色: </label
-              ><input
-                type="color"
-                id="moderator-message-background-color"
-                value="#5e84f1"
-              /><input
-                type="range"
-                id="moderator-message-background-opacity"
-                min="0"
-                max="1"
-                value="0"
-                step="0.01"
-              />
-            </div>
-            <div>
-              <label for="background-color"
-                >スポンサーのメッセージ背景色: </label
-              ><input
-                type="color"
-                id="member-message-background-color"
-                value="#0f9d58"
-              /><input
-                type="range"
-                id="member-message-background-opacity"
-                min="0"
-                max="1"
-                value="0"
-                step="0.01"
-              />
-            </div>
-          </section>
-
-          <h3>スーパーチャット関係:</h3>
-          <section>
-            <div>
-              <label for="fan-funding-first-line-font-size"
-                >"*1"の行のフォントサイズ: </label
-              ><input
-                type="number"
-                id="fan-funding-first-line-font-size"
-                value="20"
-              />
-            </div>
-            <div>
-              <label for="fan-funding-first-line-line-height"
-                >"*1"の行の行の高さ(デフォルト:0): </label
-              ><input
-                type="number"
-                id="fan-funding-first-line-line-height"
-                value="0"
-              />
-            </div>
-            <div>
-              <label for="fan-funding-first-line-color">"*1"の行の色: </label
-              ><input
-                type="color"
-                id="fan-funding-first-line-color"
-                value="#ffffff"
-              />
-            </div>
-            <div>
-              <label for="fan-funding-second-line-font-size"
-                >"*2"の行のフォントサイズ: </label
-              ><input
-                type="number"
-                id="fan-funding-second-line-font-size"
-                value="18"
-              />
-            </div>
-            <div>
-              <label for="fan-funding-second-line-line-height"
-                >"*2"の行の行の高さ(デフォルト:0): </label
-              ><input
-                type="number"
-                id="fan-funding-second-line-line-height"
-                value="0"
-              />
-            </div>
-            <div>
-              <label for="fan-funding-second-line-color">"*2"の行の色: </label
-              ><input
-                type="color"
-                id="fan-funding-second-line-color"
-                value="#ffffff"
-              />
-            </div>
-            <div>
-              <label for="super-chat-content-line-font-size"
-                >スパチャ本文のフォントサイズ: </label
-              ><input
-                type="number"
-                id="super-chat-content-font-size"
-                value="18"
-              />
-            </div>
-            <div>
-              <label for="super-chat-content-line-line-height"
-                >スパチャ本文の行の高さ(デフォルト:0): </label
-              ><input
-                type="number"
-                id="super-chat-content-line-height"
-                value="0"
-              />
-            </div>
-            <div>
-              <label for="super-chat-content-color">スパチャ本文の色: </label
-              ><input
-                type="color"
-                id="super-chat-content-color"
-                value="#ffffff"
-              />
-            </div>
-            <div>
-              <label for="show-fan-funding-background"
-                >スポンサー登録時に背景色を表示: </label
-              ><input
-                type="checkbox"
-                id="show-fan-funding-background"
-                checked=""
-              />
-            </div>
-            <div>
-              <label for="show-ticker">スーパーチャット欄を表示</label
-              ><input type="checkbox" id="show-ticker" />
-            </div>
-            <div>
-              <label for="show-everything">チャット欄を表示</label
-              ><input type="checkbox" id="show-everything" checked="" />
-            </div>
-          </section>
-          <h3>フェードイン/アウト:</h3>
-          <section>
-            <div>
-              <label for="animation-in">フェードインを使う: </label
-              ><input type="checkbox" id="animation-in" />
-            </div>
-            <div>
-              <label for="animation-in-time">フェードの時間(ミリ秒): </label
-              ><input type="number" id="animation-in-time" value="200" />
-            </div>
-            <div>
-              <label for="animation-out"
-                >フェードアウトを使う(メッセージの自動削除): </label
-              ><input type="checkbox" id="animation-out" />
-            </div>
-            <div>
-              <label for="animation-wait-time">削除までの待ち時間(秒): </label
-              ><input type="number" id="animation-wait-time" value="30" />
-            </div>
-            <div>
-              <label for="animation-out-time">フェードの時間(ミリ秒): </label
-              ><input type="number" id="animation-out-time" value="200" />
-            </div>
-            <div>
-              <label for="animation-slide">横方向にフェード(→): </label
-              ><input type="checkbox" id="animation-slide" />
-            </div>
-            <div>
-              <label for="animation-reverse">横方向にフェード(←): </label
-              ><input type="checkbox" id="animation-reverse" />
-            </div>
-            <button id="animation-trigger">テスト再生</button>
-          </section>
-        </div>
-        <!--
-          Sidebar
-        -->
-        <div
-          class="d-flex flex-column bd-highlight mb-3"
-          style="position:fixed;top:0;right:0;width:50%;"
-        >
-          <div>
-            <div id="example-container">
-              <div id="fakebody">
-                <yt-live-chat-renderer>
-                  <yt-live-chat-ticker-renderer>
-                    <yt-live-chat-ticker-paid-message-item-renderer
-                      style="background-color: rgba(0,184,212,1);"
+    <yt-live-chat-app>
+      <yt-live-chat-renderer>
+        <yt-live-chat-ticker-renderer></yt-live-chat-ticker-renderer>
+        <yt-live-chat-item-list-renderer allow-scroll>
+          <yt-live-chat-viewer-engagement-message-renderer>
+            <div id="card">
+              <yt-icon id="icon">
+                <svg
+                  focusable="false"
+                  preserveAspectRatio="xMidYMid meet"
+                  style="
+                    pointer-events: none;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                  "
+                  viewBox="0 0 24 24"
+                >
+                  <g>
+                    <g fill="none" fill-rule="evenodd">
+                      <path
+                        d="M22.54 7.6s-.2-1.5-.86-2.17c-.83-.87-1.75-.88-2.18-.93-3.04-.22-7.6-.2-7.6-.2s-4.56-.02-7.6.2c-.43.05-1.35.06-2.18.93-.65.67-.86 2.18-.86 2.18S1.04 9.4 1 11.18v1.66c.04 1.78.26 3.55.26 3.55s.2 1.5.86 2.18c.83.87 1.9.84 2.4.94 1.7.15 7.2.2 7.38.2 0 0 4.57 0 7.6-.22.43-.05 1.35-.06 2.18-.93.65-.67.86-2.18.86-2.18s.22-1.77.24-3.55v-1.66c-.02-1.78-.24-3.55-.24-3.55z"
+                        fill="#F00"
+                      />
+                      <path d="M9.68 8.9v6.18l5.84-3.1" fill="#FAFAFA" />
+                      <path
+                        d="M9.68 8.88l5.13 3.48.73-.38"
+                        fill="#000"
+                        fill-opacity=".12"
+                      />
+                      <path
+                        d="M22.54 7.6s-.2-1.5-.86-2.17c-.83-.87-1.75-.88-2.18-.93-3.04-.22-7.6-.2-7.6-.2s-4.56-.02-7.6.2c-.43.05-1.35.06-2.18.93-.65.67-.86 2.18-.86 2.18S1.04 9.4 1 11.18v.1c.04-1.76.26-3.54.26-3.54s.2-1.5.86-2.17c.83-.88 1.75-.88 2.18-.93 3.04-.22 7.6-.2 7.6-.2s4.56-.02 7.6.2c.43.05 1.35.05 2.18.93.65.66.86 2.17.86 2.17s.22 1.78.23 3.55v-.1c0-1.8-.23-3.56-.23-3.56z"
+                        fill="#FFF"
+                        fill-opacity=".2"
+                      />
+                      <path
+                        d="M22.54 16.4s-.2 1.5-.86 2.17c-.83.87-1.75.88-2.18.93-3.04.22-7.6.2-7.6.2s-4.56.02-7.6-.2c-.43-.05-1.35-.06-2.18-.93-.65-.67-.86-2.18-.86-2.18s-.22-1.8-.26-3.57v-.1c.04 1.76.26 3.54.26 3.54s.2 1.5.86 2.17c.83.88 1.75.88 2.18.93 3.04.22 7.6.2 7.6.2s4.56.02 7.6-.2c.43-.05 1.35-.05 2.18-.93.65-.66.86-2.17.86-2.17s.22-1.78.23-3.55v.1c0 1.8-.23 3.56-.23 3.56z"
+                        fill="#3E2723"
+                        fill-opacity=".2"
+                      />
+                      <path
+                        d="M9.68 15.08v.1l5.84-3.08v-.12"
+                        fill="#FFF"
+                        fill-opacity=".2"
+                      />
+                      <path
+                        d="M9.68 8.9v-.13l5.84 3.1v.1"
+                        fill="#3E2723"
+                        fill-opacity=".2"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              </yt-icon>
+              <div id="content">
+                <yt-formatted-string id="message"
+                  >チャットへようこそ！ご自身のプライバシーを守るとともに、YouTube
+                  のコミュニティ
+                  ガイドラインを遵守することを忘れないでください。</yt-formatted-string
+                >
+                <div id="action-button">
+                  <yt-button-renderer is-paper-button>
+                    <a
+                      class="yt-simple-endpoint"
+                      href="https://support.google.com/youtube/answer/2853856?hl=ja#safe"
+                      rel="noopener noreferrer"
+                      tabindex="-1"
+                      target="_blank"
                     >
-                      <div id="content">
-                        <span id="fake-avatar"></span>
-                        <span>$5.00</span>
-                      </div>
-                    </yt-live-chat-ticker-paid-message-item-renderer>
-                    <yt-live-chat-ticker-paid-message-item-renderer
-                      style="background-color: rgba(208,0,0,1);"
-                    >
-                      <div id="content">
-                        <span id="fake-avatar"></span>
-                        <span>$500.00</span>
-                      </div>
-                    </yt-live-chat-ticker-paid-message-item-renderer>
-                  </yt-live-chat-ticker-renderer>
-                  <yt-live-chat-item-list-renderer>
-                    <yt-live-chat-text-message-renderer author-type="owner">
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <span id="timestamp">12:00</span
-                        ><span id="author-badges"
-                          ><yt-live-chat-author-badge-renderer
-                            type="owner"
-                          ></yt-live-chat-author-badge-renderer></span
-                        ><span id="author-name" type="owner"
-                          >チャンネル管理者</span
-                        ><span id="message"
-                          >吾輩は猫である。名前はまだ無い。</span
+                      <paper-button
+                        aria-disabled="false"
+                        aria-label="詳細"
+                        animated
+                        elevation="0"
+                        id="button"
+                        role="button"
+                        tabindex="0"
+                      >
+                        <yt-formatted-string id="text"
+                          >詳細</yt-formatted-string
                         >
-                      </div>
-                    </yt-live-chat-text-message-renderer>
-                    <yt-live-chat-text-message-renderer author-type="moderator">
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <span id="timestamp">12:00</span
-                        ><span id="author-badges"
-                          ><yt-live-chat-author-badge-renderer
-                            type="moderator"
-                          ></yt-live-chat-author-badge-renderer></span
-                        ><span id="author-name" type="moderator"
-                          >モデレーター</span
-                        ><span id="message">This is moderator's message.</span>
-                      </div>
-                    </yt-live-chat-text-message-renderer>
-                    <yt-live-chat-text-message-renderer author-type="member">
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <span id="timestamp">12:00</span
-                        ><span id="author-badges"
-                          ><yt-live-chat-author-badge-renderer
-                            type="member"
-                          ></yt-live-chat-author-badge-renderer></span
-                        ><span id="author-name" type="member">スポンサー</span
-                        ><span id="message" type="member"
-                          >これはスポンサー登録した人のコメントです。</span
-                        >
-                      </div>
-                    </yt-live-chat-text-message-renderer>
-                    <yt-live-chat-text-message-renderer>
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <span id="timestamp">12:00</span
-                        ><span id="author-name">ふつうの視聴者</span
-                        ><span id="message">顔文字✩°｡⋆⸜(* ॑꒳ ॑* )⸝ test</span>
-                      </div>
-                    </yt-live-chat-text-message-renderer>
-                    <yt-live-chat-legacy-paid-message-renderer>
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <div id="event-text">新規スポンサー *1</div>
-                        <div id="detail-text">
-                          ようこそ、<span class="mention">お名前</span> さん！
-                        </div>
-                      </div>
-                    </yt-live-chat-legacy-paid-message-renderer>
-                    <yt-live-chat-text-message-renderer>
-                      <div id="author-photo"></div>
-                      <div id="content">
-                        <span id="timestamp">12:00</span
-                        ><span id="author-name">User Name</span
-                        ><span id="message"
-                          >春眠曉を覺えず　處處啼鳥を聞く　夜來風雨の聲　花落つること知りぬ多少ぞ</span
-                        >
-                      </div>
-                    </yt-live-chat-text-message-renderer>
-                    <yt-live-chat-paid-message-renderer>
-                      <div
-                        id="header"
-                        style="background-color: rgba(208,0,0,1);"
-                      >
-                        <div id="author-photo"></div>
-                        <div id="header-content">
-                          <div id="author-name">スパチャの投稿者名 *1</div>
-                          <div id="purchase-amount">￥10,000 *2</div>
-                        </div>
-                      </div>
-                      <div
-                        id="content"
-                        style="background-color: rgba(230,33,23,1);"
-                      >
-                        <div id="message" dir="auto">
-                          これはスパチャ本文のサンプルです💗
-                        </div>
-                      </div>
-                    </yt-live-chat-paid-message-renderer>
-                    <yt-live-chat-paid-message-renderer>
-                      <div
-                        id="header"
-                        style="background-color: rgba(0,184,212,1);"
-                      >
-                        <div id="author-photo"></div>
-                        <div id="header-content">
-                          <div id="author-name">スパチャの投稿者名 *1</div>
-                          <div id="purchase-amount">$20.00 *2</div>
-                        </div>
-                      </div>
-                      <div
-                        id="content"
-                        style="background-color: rgba(0,229,255,1);"
-                      >
-                        <div id="message" dir="auto">
-                          スーパーチャットの本文その2。
-                        </div>
-                      </div>
-                    </yt-live-chat-paid-message-renderer>
-                  </yt-live-chat-item-list-renderer>
-                </yt-live-chat-renderer>
+                      </paper-button>
+                    </a>
+                  </yt-button-renderer>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <textarea
-              id="output"
-              onclick="this.focus(); this.select();"
-              style="width:100%;height: 400px;outline: none;"
-            ></textarea>
-            <style id="example-styles">
-              @import url("https://fonts.googleapis.com/earlyaccess/notosansjp.css");
+          </yt-live-chat-viewer-engagement-message-renderer>
+          <yt-live-chat-text-message-renderer
+            author-type="owner"
+            is-highlighted
+          >
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name" type="owner"
+                  >芥川 龍之介<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">堀川の大殿様のやうな方は</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer author-type="moderator">
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges">
+                  <yt-live-chat-author-badge-renderer type="moderator">
+                    <div id="image">
+                      <yt-icon>
+                        <svg viewBox="0 0 24 24">
+                          <path
+                            clip-rule="evenodd"
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                          />
+                          <path
+                            d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"
+                          />
+                        </svg>
+                      </yt-icon>
+                    </div>
+                  </yt-live-chat-author-badge-renderer>
+                </span>
+                <span id="author-name" type="moderator"
+                  >森 鴎外<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">石炭をば早や積み果てつ</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer author-type="member">
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges">
+                  <yt-live-chat-author-badge-renderer type="member">
+                    <div id="image">
+                      <img
+                        alt=""
+                        height="24"
+                        id="img"
+                        src="./img/member-badge.png"
+                        width="24"
+                      />
+                    </div>
+                  </yt-live-chat-author-badge-renderer>
+                </span>
+                <span id="author-name" type="member"
+                  >夏目 漱石<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">吾輩は猫である。名前はまだ無い</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer>
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name"
+                  >太宰 治<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message"
+                >朝、食堂でスウプを一さじ、すっと吸ってお母さまが</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-legacy-paid-message-renderer>
+            <div id="card">
+              <yt-img-shadow class="no-transition" id="author-photo" loaded>
+                <img
+                  alt=""
+                  height="40"
+                  id="img"
+                  src="./img/avator.png"
+                  width="40"
+                />
+              </yt-img-shadow>
+              <div id="content">
+                <div id="author-name">太宰 治</div>
+                <div id="event-text">新規メンバー</div>
+                <div id="detail-text">ようこそ、太宰 治 さん！</div>
+              </div>
+            </div>
+          </yt-live-chat-legacy-paid-message-renderer>
+          <yt-live-chat-text-message-renderer>
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name"
+                  >中島 敦<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message"
+                >隴西の李徴は博学才穎、天宝の末年、若くして名を虎榜に連ね、ついで江南尉に補せられたが、性、狷介、自ら恃ところ頗厚く、賤吏に甘んずるを潔しとしなかった。いくばくもなく官を退いた後は、故山、かく略に帰臥し、人と交を絶って、ひたすら詩作に耽った</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-paid-message-renderer
+            allow-animations
+            show-only-header
+            style="
+              --yt-live-chat-paid-message-author-name-color: rgba(
+                0,
+                0,
+                0,
+                0.541176
+              );
+              --yt-live-chat-paid-message-color: rgba(0, 0, 0, 0.87451);
+              --yt-live-chat-paid-message-header-color: rgba(0, 0, 0, 0.87451);
+              --yt-live-chat-paid-message-primary-color: rgba(255, 202, 40, 1);
+              --yt-live-chat-paid-message-timestamp-color: rgba(
+                0,
+                0,
+                0,
+                0.501961
+              );
+              --yt-live-chat-paid-message-secondary-color: rgba(255, 179, 0, 1);
+            "
+          >
+            <div id="card">
+              <div id="header">
+                <yt-img-shadow class="no-transition" id="author-photo" loaded>
+                  <img
+                    alt=""
+                    height="40"
+                    id="img"
+                    src="./img/avator.png"
+                    width="40"
+                  />
+                </yt-img-shadow>
+                <div id="header-content">
+                  <div id="header-content-primary-column">
+                    <div id="author-name">宮沢 賢治</div>
+                    <div id="purchase-amount">￥ 1,000</div>
+                  </div>
+                  <span id="timestamp">2:00 PM</span>
+                </div>
+              </div>
+            </div>
+          </yt-live-chat-paid-message-renderer>
+          <yt-live-chat-text-message-renderer author-type="member">
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges">
+                  <yt-live-chat-author-badge-renderer type="member">
+                    <div id="image">
+                      <img
+                        alt=""
+                        height="24"
+                        id="img"
+                        src="./img/member-badge.png"
+                        width="24"
+                      />
+                    </div>
+                  </yt-live-chat-author-badge-renderer>
+                </span>
+                <span id="author-name" type="member"
+                  >太宰 治<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">「あ」と幽かな叫び声をお挙げになった</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer>
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name"
+                  >Lewis Carroll<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message"
+                >Alice was beginning to get very tired of sitting by her sister
+                on the bank</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-paid-message-renderer
+            allow-animations
+            style="
+              --yt-live-chat-paid-message-author-name-color: rgba(
+                255,
+                255,
+                255,
+                0.701961
+              );
+              --yt-live-chat-paid-message-color: rgba(255, 255, 255, 1);
+              --yt-live-chat-paid-message-header-color: rgba(255, 255, 255, 1);
+              --yt-live-chat-paid-message-primary-color: rgba(230, 33, 23, 1);
+              --yt-live-chat-paid-message-secondary-color: rgba(208, 0, 0, 1);
+              --yt-live-chat-paid-message-timestamp-color: rgba(
+                255,
+                255,
+                255,
+                0.501961
+              );
+            "
+          >
+            <div id="card">
+              <div id="header">
+                <yt-img-shadow class="no-transition" id="author-photo" loaded>
+                  <img
+                    alt=""
+                    height="40"
+                    id="img"
+                    src="./img/avator.png"
+                    width="40"
+                  />
+                </yt-img-shadow>
+                <div id="header-content">
+                  <div id="header-content-primary-column">
+                    <div id="author-name">福沢 諭吉</div>
+                    <div id="purchase-amount">￥ 10,000</div>
+                  </div>
+                  <span id="timestamp">2:00 PM</span>
+                </div>
+              </div>
+              <div id="content">
+                <div id="message">
+                  「天は人の上に人を造らず人の下に人を造らず」と言えり
+                </div>
+              </div>
+            </div>
+          </yt-live-chat-paid-message-renderer>
+          <yt-live-chat-text-message-renderer author-type="member">
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges">
+                  <yt-live-chat-author-badge-renderer type="member">
+                    <div id="image">
+                      <img
+                        alt=""
+                        height="24"
+                        id="img"
+                        src="./img/member-badge.png"
+                        width="24"
+                      />
+                    </div>
+                  </yt-live-chat-author-badge-renderer>
+                </span>
+                <span id="author-name" type="member"
+                  >太宰 治<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">「髪の毛？」</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer>
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name"
+                  >樋口 一葉<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message">廻れば大門の見返り柳いと長けれど</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer author-type is-deleted>
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges"></span>
+                <span id="author-name"
+                  >宮沢 賢治<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message"
+                >小さな谷川の底を写した二枚の青い幻燈です</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"
+                >[メッセージが撤回されました]</yt-formatted-string
+              >
+            </div>
+          </yt-live-chat-text-message-renderer>
+          <yt-live-chat-text-message-renderer author-type="member">
+            <yt-img-shadow class="no-transition" id="author-photo" loaded>
+              <img
+                alt=""
+                height="24"
+                id="img"
+                src="./img/avator.png"
+                width="24"
+              />
+            </yt-img-shadow>
+            <div id="content">
+              <span id="timestamp">2:00 PM</span
+              ><!--
+              --><yt-live-chat-author-chip highlights-enabled>
+                <span id="chat-badges">
+                  <yt-live-chat-author-badge-renderer type="member">
+                    <div id="image">
+                      <img
+                        alt=""
+                        height="24"
+                        id="img"
+                        src="./img/member-badge.png"
+                        width="24"
+                      />
+                    </div>
+                  </yt-live-chat-author-badge-renderer>
+                </span>
+                <span id="author-name" type="member"
+                  >太宰 治<span id="chip-badges"></span
+                ></span> </yt-live-chat-author-chip
+              ><!--
+              -->&#8203;<!--
+              --><span id="message"
+                >スウプに何か、イヤなものでも入っていたのかしら、と思った</span
+              ><!--
+              --><yt-formatted-string id="deleted-state"></yt-formatted-string>
+            </div>
+          </yt-live-chat-text-message-renderer>
+        </yt-live-chat-item-list-renderer>
+      </yt-live-chat-renderer>
+    </yt-live-chat-app>
 
-              /* Background colors*/
-              body {
-                overflow: hidden;
-                background-color: rgba(0, 0, 0, 0);
-              }
-              /* Transparent background. */
-              yt-live-chat-renderer {
-                background-color: transparent !important;
-              }
-              yt-live-chat-text-message-renderer,
-              yt-live-chat-text-message-renderer[is-highlighted] {
-                background-color: transparent !important;
-              }
+    <script
+      crossorigin="anonymous"
+      src="https://polyfill.io/v3/polyfill.min.js?features=NodeList.prototype.forEach-polyfill"
+    ></script>
+    <script>
+      window.addEventListener("message", (event) => {
+        const { url } = event.data;
 
-              yt-live-chat-text-message-renderer[author-type="owner"],
-              yt-live-chat-text-message-renderer[author-type="owner"][is-highlighted] {
-                background-color: transparent !important;
-              }
+        const link = document.createElement("link");
 
-              yt-live-chat-text-message-renderer[author-type="moderator"],
-              yt-live-chat-text-message-renderer[author-type="moderator"][is-highlighted] {
-                background-color: transparent !important;
-              }
+        link.rel = "stylesheet";
+        link.href = url;
 
-              yt-live-chat-text-message-renderer[author-type="member"],
-              yt-live-chat-text-message-renderer[author-type="member"][is-highlighted] {
-                background-color: transparent !important;
-              }
+        link.addEventListener("load", () => {
+          document
+            .querySelectorAll(
+              `link[rel="stylesheet"][href^="blob:"]:not([href="${url}"])`
+            )
+            .forEach((e) => e.parentNode.removeChild(e));
 
-              yt-live-chat-author-chip #author-name {
-                background-color: transparent !important;
-              }
-              /* Outlines */
-              yt-live-chat-renderer * {
-                text-shadow: -2px -2px #000000, -2px -1px #000000,
-                  -2px 0px #000000, -2px 1px #000000, -2px 2px #000000,
-                  -1px -2px #000000, -1px -1px #000000, -1px 0px #000000,
-                  -1px 1px #000000, -1px 2px #000000, 0px -2px #000000,
-                  0px -1px #000000, 0px 0px #000000, 0px 1px #000000,
-                  0px 2px #000000, 1px -2px #000000, 1px -1px #000000,
-                  1px 0px #000000, 1px 1px #000000, 1px 2px #000000,
-                  2px -2px #000000, 2px -1px #000000, 2px 0px #000000,
-                  2px 1px #000000, 2px 2px #000000;
-                font-family: "Noto Sans JP";
-                font-size: 18px !important;
-                line-height: 18px !important;
-              }
+          const message = {
+            frameHeight: document.body.scrollHeight,
+          };
 
-              yt-live-chat-text-message-renderer #content,
-              yt-live-chat-legacy-paid-message-renderer #content {
-                overflow: initial !important;
-              }
+          parent.postMessage(message, parent.origin);
+        });
 
-              /* Hide scrollbar. */
-              yt-live-chat-item-list-renderer #items {
-                overflow: hidden !important;
-              }
-
-              yt-live-chat-item-list-renderer #item-scroller {
-                overflow: hidden !important;
-              }
-
-              /* Hide header and input. */
-              yt-live-chat-header-renderer,
-              yt-live-chat-message-input-renderer {
-                display: none !important;
-              }
-
-              /* Reduce side padding. */
-              yt-live-chat-text-message-renderer,
-              yt-live-chat-legacy-paid-message-renderer {
-                padding-left: 4px !important;
-                padding-right: 4px !important;
-              }
-
-              yt-live-chat-paid-message-renderer #header {
-                padding-left: 4px !important;
-                padding-right: 4px !important;
-              }
-
-              /* Avatars. */
-              yt-img-shadow #img,
-              yt-live-chat-text-message-renderer #author-photo,
-              yt-live-chat-paid-message-renderer #author-photo,
-              yt-live-chat-legacy-paid-message-renderer #author-photo {
-                width: 24px !important;
-                height: 24px !important;
-                border-radius: 24px !important;
-                margin-right: 6px !important;
-              }
-
-              /* Member Badge. */
-              img.yt-live-chat-author-badge-renderer,
-              div #image,
-              svg.yt-icon {
-                width: 16px !important;
-                height: 16px !important;
-              }
-
-              /* Emoji. */
-              img.yt-live-chat-text-message-renderer {
-                width: 24px !important;
-                height: 24px !important;
-              }
-
-              /* Hide badges. */
-              yt-live-chat-text-message-renderer #author-badges {
-                vertical-align: text-top !important;
-              }
-
-              /* Timestamps. */
-              yt-live-chat-text-message-renderer #timestamp {
-                color: #999999 !important;
-                font-family: "Noto Sans JP";
-                font-size: 16px !important;
-                line-height: 16px !important;
-              }
-
-              /* Badges. */
-              yt-live-chat-text-message-renderer #author-name[type="owner"],
-              yt-live-chat-text-message-renderer #author-name.owner,
-              yt-live-chat-text-message-renderer
-                yt-live-chat-author-badge-renderer[type="owner"] {
-                color: #ffd600 !important;
-              }
-
-              yt-live-chat-text-message-renderer #author-name[type="moderator"],
-              yt-live-chat-text-message-renderer #author-name.moderator,
-              yt-live-chat-text-message-renderer
-                yt-live-chat-author-badge-renderer[type="moderator"] {
-                color: #5e84f1 !important;
-              }
-
-              yt-live-chat-text-message-renderer #author-name[type="member"],
-              yt-live-chat-text-message-renderer #author-name.member,
-              yt-live-chat-text-message-renderer
-                yt-live-chat-author-badge-renderer[type="member"] {
-                color: #0f9d58 !important;
-              }
-
-              /* Channel names. */
-              yt-live-chat-text-message-renderer #author-name {
-                color: #cccccc !important;
-                font-family: "Noto Sans JP";
-                font-size: 20px !important;
-                line-height: 20px !important;
-              }
-
-              yt-live-chat-text-message-renderer #author-name::after {
-                content: ":";
-                margin-left: 2px;
-              }
-
-              /* Messages. */
-              yt-live-chat-text-message-renderer #message,
-              yt-live-chat-text-message-renderer #message * {
-                color: #ffffff !important;
-                font-family: "Noto Sans JP";
-                font-size: 18px !important;
-                line-height: 18px !important;
-              }
-
-              /* SuperChat/Fan Funding Messages. */
-              yt-live-chat-paid-message-renderer #author-name,
-              yt-live-chat-paid-message-renderer #author-name *,
-              yt-live-chat-legacy-paid-message-renderer #event-text,
-              yt-live-chat-legacy-paid-message-renderer #event-text * {
-                color: #ffffff !important;
-                font-family: "Noto Sans JP";
-                font-size: 20px !important;
-                line-height: 20px !important;
-              }
-
-              yt-live-chat-paid-message-renderer #purchase-amount,
-              yt-live-chat-paid-message-renderer #purchase-amount *,
-              yt-live-chat-legacy-paid-message-renderer #detail-text,
-              yt-live-chat-legacy-paid-message-renderer #detail-text * {
-                color: #ffffff !important;
-                font-family: "Noto Sans JP";
-                font-size: 18px !important;
-                line-height: 18px !important;
-              }
-
-              yt-live-chat-paid-message-renderer #content,
-              yt-live-chat-paid-message-renderer #content * {
-                color: #ffffff !important;
-                font-family: "Noto Sans JP";
-                font-size: 18px !important;
-                line-height: 18px !important;
-              }
-
-              yt-live-chat-paid-message-renderer {
-                margin: 4px 0 !important;
-              }
-
-              yt-live-chat-legacy-paid-message-renderer {
-                background-color: #0f9d58 !important;
-                margin: 4px 0 !important;
-              }
-
-              yt-live-chat-text-message-renderer a,
-              yt-live-chat-legacy-paid-message-renderer a {
-                text-decoration: none !important;
-              }
-
-              yt-live-chat-text-message-renderer[is-deleted],
-              yt-live-chat-legacy-paid-message-renderer[is-deleted] {
-                display: none !important;
-              }
-
-              yt-live-chat-ticker-renderer {
-                background-color: transparent !important;
-                box-shadow: none !important;
-              }
-              yt-live-chat-ticker-renderer {
-                display: none !important;
-              }
-
-              yt-live-chat-ticker-paid-message-item-renderer,
-              yt-live-chat-ticker-paid-message-item-renderer *,
-              yt-live-chat-ticker-sponsor-item-renderer,
-              yt-live-chat-ticker-sponsor-item-renderer * {
-                color: #ffffff !important;
-                font-family: "Noto Sans JP";
-              }
-
-              yt-live-chat-mode-change-message-renderer,
-              yt-live-chat-viewer-engagement-message-renderer,
-              yt-live-chat-restricted-participation-renderer {
-                display: none !important;
-              }
-
-              yt-live-chat-viewer-engagement-message-renderer {
-                display: none !important;
-              }
-              #fakebody {
-                background-color: rgba(0, 0, 0, 0);
-              }
-              yt-live-chat-text-message-renderer,
-              yt-live-chat-legacy-paid-message-renderer {
-                animation-delay: 200ms;
-              }
-            </style>
-          </div>
-        </div>
-      </div>
-
-      <script
-        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"
-      ></script>
-      <script
-        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"
-      ></script>
-      <script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"
-      ></script>
-      <script src="./index.js"></script>
-    </body>
+        document.head.appendChild(link);
+      });
+    </script>
   </body>
 </html>

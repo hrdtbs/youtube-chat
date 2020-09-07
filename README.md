@@ -1,1 +1,1 @@
-# Simple HTML Template
+# Styling YouTube Chat

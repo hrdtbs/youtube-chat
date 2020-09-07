@@ -1,1 +1,5 @@
-# Styling YouTube Chat
+# youtube chat
+
+このリポジトリは元々YouTubeChatのCSSを生成するGeneratorでしたが、CSSファイルを直で編集した方がはやい上に柔軟な対応ができるという天才的な発想により、YouTubeChatそのものになりました。
+
+index.htmlはYouTubeChatのプレビューそのものです。ローカルでmain.cssを編集しながら、試行錯誤してみてください。
